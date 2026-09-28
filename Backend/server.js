@@ -6,18 +6,27 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
+
+// --- 1. FULL CORS CONFIGURATION FOR EXPRESS ---
+app.use(cors({
+  origin: '*', // Sabhi origins (Vercel, Localhost, etc.) se requests allow karega
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
+
 const server = http.createServer(app);
+
+// --- 2. FULL CORS CONFIGURATION FOR SOCKET.IO ---
 const io = new Server(server, {
   cors: {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE"]
+    origin: '*', // Cross-origin WebSockets allow karne ke liye
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
 });
 
-app.use(cors());
-app.use(express.json());
-
-// --- FILE STORAGE HANDLING FOR USER.JSON ---
+// --- FILE STORAGE HANDLING FOR USER.JSON / USERS.JSON ---
 const getUserFilePath = () => {
   const userJsonPath = path.join(__dirname, 'user.json');
   const usersJsonPath = path.join(__dirname, 'users.json');
@@ -33,7 +42,6 @@ const loadUsers = () => {
       const fileData = fs.readFileSync(filePath, 'utf8');
       const parsedData = JSON.parse(fileData);
       if (Array.isArray(parsedData) && parsedData.length > 0) {
-        // ID aur _id dono support karne ke liye normalize kar rahe hain
         return parsedData.map(u => ({
           ...u,
           _id: (u._id || u.id).toString(),
@@ -60,7 +68,7 @@ const saveUsers = (data) => {
   }
 };
 
-// --- IN-MEMORY DATABASE WITH FILE PERSISTENCE ---
+// --- DATA IN-MEMORY WITH FILE PERSISTENCE ---
 let users = loadUsers();
 
 let orders = [
@@ -77,7 +85,7 @@ let menu = [
   { _id: 'm7', name: 'Paneer Roll', price: 70, category: 'Snacks', stock: 20, left: 20, quantity: 20, inStock: true, available: true }
 ];
 
-// --- Socket.io Connection ---
+// --- SOCKET.IO CONNECTION ---
 io.on('connection', (socket) => {
   console.log(`⚡ Enterprise Connected: ${socket.id}`);
 });
@@ -123,7 +131,7 @@ app.post('/api/users/register', (req, res) => {
   };
   
   users.push(newUser);
-  saveUsers(users); // Instant save to user.json
+  saveUsers(users); // Persistent save to JSON file
   io.emit('user_registered', newUser);
   res.status(201).json(newUser);
 });
@@ -134,7 +142,7 @@ app.put('/api/users/:id/approve', (req, res) => {
   
   if (user) {
     user.status = 'approved';
-    saveUsers(users); // Instant save to user.json
+    saveUsers(users); // Persistent save to JSON file
     io.emit('user_status_updated', user);
     res.json(user);
   } else {
@@ -145,7 +153,7 @@ app.put('/api/users/:id/approve', (req, res) => {
 app.delete('/api/users/:id', (req, res) => {
   const targetId = req.params.id.toString();
   users = users.filter(u => (u._id || u.id).toString() !== targetId);
-  saveUsers(users); // Instant save to user.json
+  saveUsers(users); // Persistent save to JSON file
   io.emit('user_deleted', req.params.id);
   res.json({ message: 'User deleted' });
 });
@@ -214,8 +222,8 @@ app.delete('/api/menu/:id', (req, res) => {
   res.json({ message: 'Menu item removed' });
 });
 
-// --- Start Server ---
+// --- SERVER START ---
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 FoodieYou In-Memory Enterprise Server running on port ${PORT}`);
+  console.log(`🚀 FoodieYou Enterprise Backend running on port ${PORT}`);
 });
