@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
@@ -15,13 +17,51 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-// --- IN-MEMORY MOCK DATABASE ---
-let users = [
-  { _id: '1', name: 'Student User', email: 'student@jiet.ac.in', password: '123', role: 'student', status: 'approved' },
-  { _id: '2', name: 'Canteen Staff', email: 'staff@jiet.ac.in', password: '123', role: 'staff', status: 'approved' },
-  { _id: '3', name: 'Rahul Sharma', email: 'rahul@jiet.ac.in', password: '123', role: 'student', status: 'pending' },
-  { _id: '4', name: 'Priya Soni', email: 'priya@jiet.ac.in', password: '123', role: 'student', status: 'pending' }
-];
+// --- FILE STORAGE HANDLING FOR USER.JSON ---
+const getUserFilePath = () => {
+  const userJsonPath = path.join(__dirname, 'user.json');
+  const usersJsonPath = path.join(__dirname, 'users.json');
+  if (fs.existsSync(userJsonPath)) return userJsonPath;
+  if (fs.existsSync(usersJsonPath)) return usersJsonPath;
+  return userJsonPath;
+};
+
+const loadUsers = () => {
+  try {
+    const filePath = getUserFilePath();
+    if (fs.existsSync(filePath)) {
+      const fileData = fs.readFileSync(filePath, 'utf8');
+      const parsedData = JSON.parse(fileData);
+      if (Array.isArray(parsedData) && parsedData.length > 0) {
+        // ID aur _id dono support karne ke liye normalize kar rahe hain
+        return parsedData.map(u => ({
+          ...u,
+          _id: (u._id || u.id).toString(),
+          id: (u.id || u._id).toString()
+        }));
+      }
+    }
+  } catch (err) {
+    console.error("Error reading user file:", err.message);
+  }
+
+  return [
+    { _id: '1', id: '1', name: 'Super Admin', email: 'admin@foodieyou.com', password: 'admin123', role: 'admin', status: 'approved' },
+    { _id: '2', id: '2', name: 'Chef Suresh', email: 'staff@foodieyou.com', password: 'password123', role: 'staff', status: 'approved' }
+  ];
+};
+
+const saveUsers = (data) => {
+  try {
+    const filePath = getUserFilePath();
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (err) {
+    console.error("Error saving user file:", err.message);
+  }
+};
+
+// --- IN-MEMORY DATABASE WITH FILE PERSISTENCE ---
+let users = loadUsers();
 
 let orders = [
   { tokenNumber: 101, studentName: 'Student User', items: [{ name: 'Veg Burger', price: 50, qty: 1 }], total: 50, status: 'completed', createdAt: new Date() }
@@ -66,27 +106,35 @@ app.post('/api/users/login', (req, res) => {
 
 app.post('/api/users/register', (req, res) => {
   const { name, email, password, role } = req.body;
-  const existing = users.find(u => u.email === email);
+  const existing = users.find(u => u.email.toLowerCase() === email.toLowerCase());
   if (existing) {
     return res.status(400).json({ error: 'Email already registered!' });
   }
+  
+  const newId = Date.now().toString();
   const newUser = {
-    _id: Date.now().toString(),
+    _id: newId,
+    id: newId,
     name,
     email,
     password,
     role: role || 'student',
     status: 'pending'
   };
+  
   users.push(newUser);
+  saveUsers(users); // Instant save to user.json
   io.emit('user_registered', newUser);
   res.status(201).json(newUser);
 });
 
 app.put('/api/users/:id/approve', (req, res) => {
-  const user = users.find(u => u._id === req.params.id);
+  const targetId = req.params.id.toString();
+  const user = users.find(u => (u._id || u.id).toString() === targetId);
+  
   if (user) {
     user.status = 'approved';
+    saveUsers(users); // Instant save to user.json
     io.emit('user_status_updated', user);
     res.json(user);
   } else {
@@ -95,7 +143,9 @@ app.put('/api/users/:id/approve', (req, res) => {
 });
 
 app.delete('/api/users/:id', (req, res) => {
-  users = users.filter(u => u._id !== req.params.id);
+  const targetId = req.params.id.toString();
+  users = users.filter(u => (u._id || u.id).toString() !== targetId);
+  saveUsers(users); // Instant save to user.json
   io.emit('user_deleted', req.params.id);
   res.json({ message: 'User deleted' });
 });

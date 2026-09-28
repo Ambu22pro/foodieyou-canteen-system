@@ -6,7 +6,10 @@ import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 
-const socket = io('http://localhost:5000');
+// 🚀 Render Live Backend URL (Agar aapka Render URL alag hai toh yahan paste karein)
+const API_BASE_URL = 'https://foodieyou-backend.onrender.com';
+
+const socket = io(API_BASE_URL);
 
 function App() {
   const [currentView, setCurrentView] = useState(() => {
@@ -22,12 +25,12 @@ function App() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/users')
+    fetch(`${API_BASE_URL}/api/users`)
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => console.error('Error fetching users:', err));
 
-    fetch('http://localhost:5000/api/orders')
+    fetch(`${API_BASE_URL}/api/orders`)
       .then(res => res.json())
       .then(data => setOrders(data))
       .catch(err => console.error('Error fetching orders:', err));
@@ -74,7 +77,7 @@ function App() {
 
   const handleRegisterSubmit = async (newUser) => {
     try {
-      const res = await fetch('http://localhost:5000/api/users/register', {
+      const res = await fetch(`${API_BASE_URL}/api/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)
@@ -87,7 +90,7 @@ function App() {
 
   const handleApproveUser = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/users/${id}/approve`, {
+      await fetch(`${API_BASE_URL}/api/users/${id}/approve`, {
         method: 'PUT'
       });
     } catch (err) {
@@ -97,7 +100,7 @@ function App() {
 
   const handleRemoveUser = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/users/${id}`, {
+      await fetch(`${API_BASE_URL}/api/users/${id}`, {
         method: 'DELETE'
       });
     } catch (err) {
@@ -111,7 +114,7 @@ function App() {
         ...newOrder,
         studentName: activeUser?.name || 'Campus Student'
       };
-      await fetch('http://localhost:5000/api/orders', {
+      await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload)
@@ -123,7 +126,7 @@ function App() {
 
   const handleUpdateOrderStatus = async (tokenNumber, newStatus) => {
     try {
-      await fetch(`http://localhost:5000/api/orders/${tokenNumber}`, {
+      await fetch(`${API_BASE_URL}/api/orders/${tokenNumber}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
