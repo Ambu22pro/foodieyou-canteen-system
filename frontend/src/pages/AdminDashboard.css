@@ -1,0 +1,222 @@
+/* Admin Dashboard Modern SaaS Theme */
+.admin-container {
+  padding: 2.5rem;
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.admin-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.signout-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.signout-btn:hover {
+  background: #fecaca;
+}
+
+/* Tabs Navigation */
+.admin-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: white;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.tab-btn.active {
+  background: #0f172a;
+  color: white;
+  border-color: #0f172a;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+/* Analytics Cards Grid */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-card span {
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.stat-card h2 {
+  margin: 12px 0 0 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+/* Tables & Content Cards */
+.admin-card-box {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+.admin-table th {
+  background: #f1f5f9;
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #475569;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.admin-table td {
+  padding: 14px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status-badge.approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+/* Action Buttons */
+.approve-btn {
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Menu Grid Layout */
+.menu-manage-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+.menu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 1.5rem;
+}
+
+.menu-form input, .menu-form select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.menu-submit-btn {
+  background: #f97316;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-submit-btn:hover {
+  background: #ea580c;
+}
+
+.menu-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.menu-catalog-card {
+  background: #f8fafc;
+  padding: 1.2rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  text-align: center;
+}

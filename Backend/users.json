@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Super Admin",
+    "email": "admin@foodieyou.com",
+    "password": "admin123",
+    "role": "admin",
+    "status": "approved"
+  },
+  {
+    "id": 2,
+    "name": "Chef Suresh",
+    "email": "staff@foodieyou.com",
+    "password": "password123",
+    "role": "staff",
+    "status": "approved"
+  },
+  {
+    "id": 1790523667970,
+    "name": "Prashant",
+    "email": "student@jiet.ac.in",
+    "password": "prashant123",
+    "role": "student",
+    "status": "approved"
+  },
+  {
+    "id": 1790523848566,
+    "name": "kamal",
+    "email": "staff@foodieyou.com",
+    "password": "kamal123",
+    "role": "staff",
+    "status": "approved"
+  }
+]

@@ -1,0 +1,28 @@
+[
+  {
+    "tokenNumber": "TK-859",
+    "studentName": "Campus Student",
+    "items": [
+      {
+        "id": 1,
+        "name": "Special Masala Dosa",
+        "price": 80,
+        "category": "South Indian",
+        "image": "🥟",
+        "qty": 1
+      },
+      {
+        "id": 2,
+        "name": "Cheese Burger Combo",
+        "price": 120,
+        "category": "Fast Food",
+        "image": "🍔",
+        "qty": 1
+      }
+    ],
+    "total": 200,
+    "status": "preparing",
+    "prepTime": "Calculating...",
+    "timestamp": "9:12:15 pm"
+  }
+]

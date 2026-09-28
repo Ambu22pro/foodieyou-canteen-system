@@ -1,0 +1,318 @@
+.staff-dashboard-wrapper {
+  min-height: 100vh;
+  background: #f1f5f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1e293b;
+}
+
+.staff-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.staff-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.staff-badge-icon {
+  font-size: 1.8rem;
+  background: #fff7ed;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+.staff-brand h2 {
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.staff-brand span {
+  color: #f97316;
+}
+
+.staff-brand small {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.staff-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.staff-status-pill {
+  background: #dcfce7;
+  color: #166534;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.staff-logout-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.staff-main-container {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.staff-header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.staff-header-section h1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.staff-header-section p {
+  color: #64748b;
+}
+
+.stat-chip {
+  background: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.stat-chip span {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-right: 8px;
+}
+
+.stat-chip strong {
+  font-size: 1.2rem;
+  color: #f97316;
+}
+
+.staff-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.staff-tab-btn {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.staff-tab-btn.active {
+  background: #0f172a;
+  color: white;
+  border-color: #0f172a;
+}
+
+.staff-orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.no-orders-box {
+  grid-column: 1 / -1;
+  background: white;
+  border-radius: 16px;
+  padding: 4rem;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+}
+
+.no-orders-box span {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.staff-order-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.order-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.token-number-badge {
+  background: #fff7ed;
+  color: #c2410c;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 800;
+  border: 1px solid #ffedd5;
+}
+
+.status-badge-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.status-badge-tag.preparing { background: #fef3c7; color: #d97706; }
+.status-badge-tag.ready { background: #dcfce7; color: #16a34a; }
+.status-badge-tag.completed { background: #e2e8f0; color: #475569; }
+
+.order-student-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.student-icon {
+  font-size: 1.5rem;
+}
+
+.order-student-info small {
+  display: block;
+  color: #64748b;
+}
+
+.order-items-box h4 {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.order-items-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+
+.order-items-box li {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.95rem;
+  border-bottom: 1px dashed #f1f5f9;
+}
+
+.prep-time-assigner {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.prep-time-assigner input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.prep-time-assigner button {
+  background: #0f172a;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.current-prep-display {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 1rem;
+}
+
+.order-card-footer {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-total-price {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+}
+
+.mark-ready-btn {
+  width: 100%;
+  background: #16a34a;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mark-ready-btn:hover {
+  background: #15803d;
+}
+
+.mark-complete-btn {
+  width: 100%;
+  background: #0284c7;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.fulfilled-text {
+  text-align: center;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 6px;
+}
