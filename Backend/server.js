@@ -7,21 +7,22 @@ const path = require('path');
 
 const app = express();
 
-// --- 1. FULL CORS CONFIGURATION FOR EXPRESS ---
+// --- CORS CONFIGURATION ---
 app.use(cors({
-  origin: '*', // Sabhi origins (Vercel, Localhost, etc.) se requests allow karega
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+app.options('*', cors());
 app.use(express.json());
 
 const server = http.createServer(app);
 
-// --- 2. FULL CORS CONFIGURATION FOR SOCKET.IO ---
+// --- SOCKET.IO CORS ---
 const io = new Server(server, {
   cors: {
-    origin: '*', // Cross-origin WebSockets allow karne ke liye
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE']
   }
 });
@@ -68,7 +69,6 @@ const saveUsers = (data) => {
   }
 };
 
-// --- DATA IN-MEMORY WITH FILE PERSISTENCE ---
 let users = loadUsers();
 
 let orders = [
@@ -85,14 +85,12 @@ let menu = [
   { _id: 'm7', name: 'Paneer Roll', price: 70, category: 'Snacks', stock: 20, left: 20, quantity: 20, inStock: true, available: true }
 ];
 
-// --- SOCKET.IO CONNECTION ---
 io.on('connection', (socket) => {
-  console.log(`⚡ Enterprise Connected: ${socket.id}`);
+  console.log(`⚡ Connected Client: ${socket.id}`);
 });
 
 // --- API ROUTES ---
 
-// 1. Users & Auth Routes
 app.get('/api/users', (req, res) => {
   res.json(users);
 });
@@ -131,7 +129,7 @@ app.post('/api/users/register', (req, res) => {
   };
   
   users.push(newUser);
-  saveUsers(users); // Persistent save to JSON file
+  saveUsers(users);
   io.emit('user_registered', newUser);
   res.status(201).json(newUser);
 });
@@ -142,7 +140,7 @@ app.put('/api/users/:id/approve', (req, res) => {
   
   if (user) {
     user.status = 'approved';
-    saveUsers(users); // Persistent save to JSON file
+    saveUsers(users);
     io.emit('user_status_updated', user);
     res.json(user);
   } else {
@@ -153,12 +151,11 @@ app.put('/api/users/:id/approve', (req, res) => {
 app.delete('/api/users/:id', (req, res) => {
   const targetId = req.params.id.toString();
   users = users.filter(u => (u._id || u.id).toString() !== targetId);
-  saveUsers(users); // Persistent save to JSON file
+  saveUsers(users);
   io.emit('user_deleted', req.params.id);
   res.json({ message: 'User deleted' });
 });
 
-// 2. Orders & Payment Routes
 app.get('/api/orders', (req, res) => {
   res.json(orders);
 });
@@ -177,11 +174,11 @@ app.post('/api/orders', (req, res) => {
 });
 
 app.post('/api/payment', (req, res) => {
-  res.json({ success: true, paymentId: 'PAY_' + Date.now(), message: 'Payment gateway verified successfully' });
+  res.json({ success: true, paymentId: 'PAY_' + Date.now(), message: 'Payment verified' });
 });
 
 app.post('/api/pay', (req, res) => {
-  res.json({ success: true, paymentId: 'PAY_' + Date.now(), message: 'Payment processed successfully' });
+  res.json({ success: true, paymentId: 'PAY_' + Date.now(), message: 'Payment processed' });
 });
 
 app.put('/api/orders/:tokenNumber', (req, res) => {
@@ -195,7 +192,6 @@ app.put('/api/orders/:tokenNumber', (req, res) => {
   }
 });
 
-// 3. Menu Routes
 app.get('/api/menu', (req, res) => {
   res.json(menu);
 });
@@ -222,8 +218,7 @@ app.delete('/api/menu/:id', (req, res) => {
   res.json({ message: 'Menu item removed' });
 });
 
-// --- SERVER START ---
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`🚀 FoodieYou Enterprise Backend running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });

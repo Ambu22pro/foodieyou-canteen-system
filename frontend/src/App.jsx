@@ -6,10 +6,14 @@ import AdminDashboard from './pages/AdminDashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import StaffDashboard from './pages/StaffDashboard';
 
-// 🚀 Render Live Backend URL (Agar aapka Render URL alag hai toh yahan paste karein)
-const API_BASE_URL = 'https://foodieyou-backend.onrender.com';
+// Auto URL detector for Localhost vs Render Live
+const API_BASE_URL = (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))
+  ? 'http://localhost:5000'
+  : 'https://foodieyou-backend.onrender.com';
 
-const socket = io(API_BASE_URL);
+const socket = io(API_BASE_URL, {
+  transports: ['websocket', 'polling']
+});
 
 function App() {
   const [currentView, setCurrentView] = useState(() => {
@@ -24,19 +28,29 @@ function App() {
   const [users, setUsers] = useState([]);
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
+  const fetchUsers = () => {
     fetch(`${API_BASE_URL}/api/users`)
       .then(res => res.json())
       .then(data => setUsers(data))
       .catch(err => console.error('Error fetching users:', err));
+  };
 
+  const fetchOrders = () => {
     fetch(`${API_BASE_URL}/api/orders`)
       .then(res => res.json())
       .then(data => setOrders(data))
       .catch(err => console.error('Error fetching orders:', err));
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    fetchOrders();
 
     socket.on('user_registered', (newUser) => {
-      setUsers(prev => [...prev, newUser]);
+      setUsers(prev => {
+        const exists = prev.some(u => (u.id === newUser.id || u._id === newUser._id));
+        return exists ? prev : [...prev, newUser];
+      });
     });
 
     socket.on('user_status_updated', (updatedUser) => {
@@ -82,9 +96,17 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)
       });
-      await res.json();
+      const data = await res.json();
+      if (res.ok) {
+        alert('Registration Successful! Your account is pending Admin approval.');
+        fetchUsers();
+        updateSession('login', null);
+      } else {
+        alert(data.error || 'Registration failed');
+      }
     } catch (err) {
       console.error('Registration error:', err);
+      alert('Network error during registration!');
     }
   };
 
@@ -93,6 +115,7 @@ function App() {
       await fetch(`${API_BASE_URL}/api/users/${id}/approve`, {
         method: 'PUT'
       });
+      fetchUsers();
     } catch (err) {
       console.error('Approval error:', err);
     }
@@ -103,6 +126,7 @@ function App() {
       await fetch(`${API_BASE_URL}/api/users/${id}`, {
         method: 'DELETE'
       });
+      fetchUsers();
     } catch (err) {
       console.error('Deletion error:', err);
     }
@@ -119,6 +143,7 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderPayload)
       });
+      fetchOrders();
     } catch (err) {
       console.error('Order placement error:', err);
     }
@@ -131,6 +156,7 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       });
+      fetchOrders();
     } catch (err) {
       console.error('Order status update error:', err);
     }
